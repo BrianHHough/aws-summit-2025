@@ -1,0 +1,5 @@
+aws-cdk-lib==2.189.0
+constructs>=10.0.0,<11.0.0
+aws-cdk.lambda-layer-kubectl-v27
+python-dotenv
+cdklabs.generative_ai_cdk_constructs

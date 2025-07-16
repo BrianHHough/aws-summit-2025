@@ -1,0 +1,88 @@
+# ----------------------
+# Data Models
+# ----------------------
+
+type Document {
+  document_id: ID!
+  user_id: ID!
+  file_title: String!
+  file_type: String!
+  s3_key: String!
+  scan_status: String!
+  upload_timestamp: AWSDateTime!
+  processing_status: String
+  page_count: Int
+  file_size: Float
+  final_s3_key: String
+  last_accessed: AWSDateTime
+  tags: [String]
+}
+
+type DocumentSession {
+  id: ID!
+  document_id: ID!
+  user_id: ID!
+  title: String
+  created_at: AWSDateTime!
+  updated_at: AWSDateTime!
+}
+
+type ChatMessage {
+  id: ID!
+  document_session_id: ID!
+  user_id: ID!
+  role: String!          # 'user' or 'assistant'
+  content: String!
+  created_at: AWSDateTime!
+  timestamp: AWSDateTime
+}
+
+# ----------------------
+# Queries
+# ----------------------
+
+type Query {
+  getDocument(document_id: ID!): Document
+  listDocumentsByUser: [Document]
+  listDocumentsByUserByTime: [Document]
+
+  getDocumentSession(id: ID!): DocumentSession
+  listDocumentSessionsByDocument(document_id: ID!): [DocumentSession]
+  listDocumentSessionsByUserByTime: [DocumentSession]
+
+  getChatMessagesBySession(document_session_id: ID!): [ChatMessage]
+}
+
+# ----------------------
+# Mutations
+# ----------------------
+
+type Mutation {
+  # Not needed because the object will initially exist already via S3 upload + GuardDuty malware scan
+  # createDocument(
+  #   document_id: ID!
+  #   user_id: ID!
+  #   file_title: String!
+  #   file_type: String!
+  #   s3_key: String!
+  #   scan_status: String!
+  #   upload_timestamp: AWSDateTime!
+  # ): Document
+
+  createDocumentSession(
+    id: ID!
+    document_id: ID!
+    title: String
+    created_at: AWSDateTime!
+    updated_at: AWSDateTime!
+  ): DocumentSession
+
+  createChatMessage(
+    id: ID!
+    document_session_id: ID!
+    role: String!
+    content: String!
+    created_at: AWSDateTime!
+    timestamp: AWSDateTime
+  ): ChatMessage
+}
